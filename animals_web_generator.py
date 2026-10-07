@@ -17,10 +17,39 @@ def load_data(file_path):
         print(f"An unexpected error occured: {e}")
 
 
-def print_animal_data():
-    """Loads animal data from a given json file and prints it to the console"""
-    animals_data = load_data("animals_data.json")
+def load_template(file_path):
+    """Loads the html string from a file and returns it"""
 
+    try:
+        with open(file_path, "r") as f:
+            return f.read()
+    except FileNotFoundError:
+        print(f"File {file_path} could not be found")
+    except PermissionError:
+        print(f"File {file_path} could not be opend")
+    except Exception as e:
+        print(f"An unexpected error occured: {e}")
+
+
+def write_html(file_path, content):
+    """Writes a content into a given file"""
+
+    try:
+        with open(file_path, "w") as f:
+            f.write(content)
+    except FileNotFoundError:
+        print(f"File {file_path} could not be found")
+    except PermissionError:
+        print(f"File {file_path} could not be written")
+    except Exception as e:
+        print(f"An unexpected error occured: {e}")
+
+
+def get_animal_data_from_json_file(file_path):
+    """Loads animal data from a given json file and returns it as a string"""
+
+    animals_data = load_data(file_path)
+    animal_data_string = ""
     for animal in animals_data:
         animal_name = animal.get("name")
         animal_location = None
@@ -35,22 +64,42 @@ def print_animal_data():
         if animal_locations and len(animal_locations) > 0:
             animal_location = animal_locations[0]
 
-        print_single_animal_attribute("Name", animal_name)
-        print_single_animal_attribute("Diet", animal_diet)
-        print_single_animal_attribute("Location", animal_location)
-        print_single_animal_attribute("Type", animal_type)
-        print()
+        animal_data_string += add_single_animal_attribute("Name", animal_name)
+        animal_data_string += add_single_animal_attribute("Diet", animal_diet)
+        animal_data_string += add_single_animal_attribute("Location", animal_location)
+        animal_data_string += add_single_animal_attribute("Type", animal_type)
+        animal_data_string += "\n"
+
+    return animal_data_string
 
 
-def print_single_animal_attribute(attr_name, attr_value):
-    """Prints a single attribute of an animal if it not None"""
+def add_single_animal_attribute(attr_name, attr_value):
+    """
+    Returns a string for a single attribute of an animal if it is not None.
+    If it is None, it returns an empty string
+    """
 
     if attr_value:
-        print(f"{attr_name}: {attr_value}")
+        return f"{attr_name}: {attr_value}\n"
+    else:
+        return ""
+
+
+def replace_template_with_string(template_path, html_path, data_string):
+    """
+    Loads the html template, replaces the placeholder with the data string and writes the html to a given path
+    """
+
+    template_string = load_template(template_path)
+    html_string = template_string.replace("__REPLACE_ANIMALS_INFO__", data_string)
+    write_html(html_path, html_string)
 
 
 def main():
-    print_animal_data()
+    animal_data_string = get_animal_data_from_json_file("animals_data.json")
+    replace_template_with_string(
+        "animals_template.html", "animal.html", animal_data_string
+    )
 
 
 if __name__ == "__main__":
