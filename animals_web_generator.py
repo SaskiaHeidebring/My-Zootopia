@@ -49,29 +49,56 @@ def get_animal_data_from_json_file(file_path):
     """Loads animal data from a given json file and returns it as a string"""
 
     animals_data = load_data(file_path)
-    animal_data_string = ""
+    animals_string = ""
     for animal in animals_data:
-        animal_name = animal.get("name")
-        animal_location = None
-        animal_diet = None
-        animal_type = None
-        animal_characteristics = animal.get("characteristics")
+        animal_data = get_animal_data(animal)
+        animals_string += serialize_animal(animal_data)
 
-        if animal_characteristics:
-            animal_diet = animal_characteristics.get("diet")
-            animal_type = animal_characteristics.get("type")
-        animal_locations = animal.get("locations")
-        if animal_locations and len(animal_locations) > 0:
-            animal_location = animal_locations[0]
+    return animals_string
 
-        animal_data_string += get_li_begin()
-        animal_data_string += get_name_div(animal_name)
-        animal_data_string += get_p_begin()
-        animal_data_string += add_single_animal_attribute("Diet", animal_diet)
-        animal_data_string += add_single_animal_attribute("Location", animal_location)
-        animal_data_string += add_single_animal_attribute("Type", animal_type)
-        animal_data_string += get_p_end()
-        animal_data_string += get_li_end()
+
+def get_animal_data(animal):
+    """
+    Returns an dictionary from an animal data set with the animals name, diet, location and type.
+    If one of those attributes does not exist, the correspoding field in the dictionary is None
+    """
+
+    animal_name = animal.get("name")
+    animal_location = None
+    animal_diet = None
+    animal_type = None
+    animal_characteristics = animal.get("characteristics")
+
+    if animal_characteristics:
+        animal_diet = animal_characteristics.get("diet")
+        animal_type = animal_characteristics.get("type")
+    animal_locations = animal.get("locations")
+    if animal_locations and len(animal_locations) > 0:
+        animal_location = animal_locations[0]
+
+    animal_data = {}
+    animal_data["name"] = animal_name
+    animal_data["diet"] = animal_diet
+    animal_data["location"] = animal_location
+    animal_data["type"] = animal_type
+
+    return animal_data
+
+
+def serialize_animal(animal_data):
+    """Returns the html for a single animal"""
+
+    animal_data_string = ""
+    animal_data_string += get_li_begin()
+    animal_data_string += get_name_div(animal_data["name"])
+    animal_data_string += get_p_begin()
+    animal_data_string += add_single_animal_attribute("Diet", animal_data["diet"])
+    animal_data_string += add_single_animal_attribute(
+        "Location", animal_data["location"]
+    )
+    animal_data_string += add_single_animal_attribute("Type", animal_data["type"])
+    animal_data_string += get_p_end()
+    animal_data_string += get_li_end()
 
     return animal_data_string
 
