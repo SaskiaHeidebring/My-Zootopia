@@ -59,7 +59,8 @@ def get_animal_data_from_json_file(file_path):
 
 def get_animal_data(animal):
     """
-    Returns an dictionary from an animal data set with the animals name, diet, location and type.
+    Returns an dictionary from an animal data set with the animals name, diet, location, type,
+    lifespan, weight and length.
     If one of those attributes does not exist, the correspoding field in the dictionary is None
     """
 
@@ -67,11 +68,17 @@ def get_animal_data(animal):
     animal_location = None
     animal_diet = None
     animal_type = None
+    animal_lifespan = None
+    animal_length = None
+    animal_weight = None
     animal_characteristics = animal.get("characteristics")
 
     if animal_characteristics:
         animal_diet = animal_characteristics.get("diet")
         animal_type = animal_characteristics.get("type")
+        animal_lifespan = animal_characteristics.get("lifespan")
+        animal_weight = animal_characteristics.get("weight")
+        animal_length = animal_characteristics.get("length")
     animal_locations = animal.get("locations")
     if animal_locations and len(animal_locations) > 0:
         animal_location = animal_locations[0]
@@ -81,6 +88,9 @@ def get_animal_data(animal):
     animal_data["diet"] = animal_diet
     animal_data["location"] = animal_location
     animal_data["type"] = animal_type
+    animal_data["lifespan"] = animal_lifespan
+    animal_data["weight"] = animal_weight
+    animal_data["length"] = animal_length
 
     return animal_data
 
@@ -97,6 +107,11 @@ def serialize_animal(animal_data):
         "Location", animal_data["location"]
     )
     animal_data_string += add_single_animal_attribute("Type", animal_data["type"])
+    animal_data_string += add_single_animal_attribute(
+        "Lifespan", animal_data["lifespan"]
+    )
+    animal_data_string += add_single_animal_attribute("Weight", animal_data["weight"])
+    animal_data_string += add_single_animal_attribute("Length", animal_data["length"])
     animal_data_string += get_p_end()
     animal_data_string += get_li_end()
 
