@@ -65,10 +65,12 @@ def get_animal_data_from_json_file(file_path):
             animal_location = animal_locations[0]
 
         animal_data_string += get_li_begin()
-        animal_data_string += add_single_animal_attribute("Name", animal_name)
+        animal_data_string += get_name_div(animal_name)
+        animal_data_string += get_p_begin()
         animal_data_string += add_single_animal_attribute("Diet", animal_diet)
         animal_data_string += add_single_animal_attribute("Location", animal_location)
         animal_data_string += add_single_animal_attribute("Type", animal_type)
+        animal_data_string += get_p_end()
         animal_data_string += get_li_end()
 
     return animal_data_string
@@ -76,26 +78,47 @@ def get_animal_data_from_json_file(file_path):
 
 def add_single_animal_attribute(attr_name, attr_value):
     """
-    Returns a string for a single attribute of an animal if it is not None.
+    Returns a strong tag for a single attribute of an animal if it is not None.
     If it is None, it returns an empty string
     """
 
     if attr_value:
-        return f"{attr_name}: {attr_value}<br/>\n"
+        return f"<strong/>{attr_name}: </strong>{attr_value}<br/>\n"
     else:
         return ""
 
 
 def get_li_begin():
-    """Returns a string for opening an html li element"""
+    """Returns a string for opening a html li element"""
 
     return "<li class='cards__item'>\n"
 
 
 def get_li_end():
-    """Returns a string for ending an html li element"""
+    """Returns a string for ending a html li element"""
 
     return "</li>\n"
+
+
+def get_name_div(animal_name):
+    """Returns the animal div string if the animal name if not None"""
+
+    if animal_name:
+        return f"<div class='card__title'>{animal_name}</div>\n"
+    else:
+        return ""
+
+
+def get_p_begin():
+    """Returns a string for opening a p html element"""
+
+    return "<p class='card__text'>\n"
+
+
+def get_p_end():
+    """Returns a string for endling a html element"""
+
+    return "</p>"
 
 
 def replace_template_with_string(template_path, html_path, data_string):
