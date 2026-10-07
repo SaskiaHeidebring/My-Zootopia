@@ -64,11 +64,12 @@ def get_animal_data_from_json_file(file_path):
         if animal_locations and len(animal_locations) > 0:
             animal_location = animal_locations[0]
 
+        animal_data_string += get_li_begin()
         animal_data_string += add_single_animal_attribute("Name", animal_name)
         animal_data_string += add_single_animal_attribute("Diet", animal_diet)
         animal_data_string += add_single_animal_attribute("Location", animal_location)
         animal_data_string += add_single_animal_attribute("Type", animal_type)
-        animal_data_string += "\n"
+        animal_data_string += get_li_end()
 
     return animal_data_string
 
@@ -80,9 +81,21 @@ def add_single_animal_attribute(attr_name, attr_value):
     """
 
     if attr_value:
-        return f"{attr_name}: {attr_value}\n"
+        return f"{attr_name}: {attr_value}<br/>\n"
     else:
         return ""
+
+
+def get_li_begin():
+    """Returns a string for opening an html li element"""
+
+    return "<li class='cards__item'>\n"
+
+
+def get_li_end():
+    """Returns a string for ending an html li element"""
+
+    return "</li>\n"
 
 
 def replace_template_with_string(template_path, html_path, data_string):
