@@ -1,4 +1,5 @@
 import json
+from html_helper import *
 
 
 def load_data(file_path):
@@ -99,9 +100,10 @@ def serialize_animal(animal_data):
     """Returns the html for a single animal"""
 
     animal_data_string = ""
-    animal_data_string += get_li_begin()
+    animal_data_string += get_li_begin("cards__item")
     animal_data_string += get_name_div(animal_data["name"])
-    animal_data_string += get_p_begin()
+    animal_data_string += get_div_begin()
+    animal_data_string += get_ul_begin()
     animal_data_string += add_single_animal_attribute("Diet", animal_data["diet"])
     animal_data_string += add_single_animal_attribute(
         "Location", animal_data["location"]
@@ -112,7 +114,8 @@ def serialize_animal(animal_data):
     )
     animal_data_string += add_single_animal_attribute("Weight", animal_data["weight"])
     animal_data_string += add_single_animal_attribute("Length", animal_data["length"])
-    animal_data_string += get_p_end()
+    animal_data_string += get_ul_end()
+    animal_data_string += get_div_end()
     animal_data_string += get_li_end()
 
     return animal_data_string
@@ -125,42 +128,12 @@ def add_single_animal_attribute(attr_name, attr_value):
     """
 
     if attr_value:
-        return f"<strong/>{attr_name}: </strong>{attr_value}<br/>\n"
+        animal_attr_string = get_li_begin()
+        animal_attr_string += f"<strong/>{attr_name}: </strong>{attr_value}\n"
+        animal_attr_string += get_li_end()
+        return animal_attr_string
     else:
         return ""
-
-
-def get_li_begin():
-    """Returns a string for opening a html li element"""
-
-    return "<li class='cards__item'>\n"
-
-
-def get_li_end():
-    """Returns a string for ending a html li element"""
-
-    return "</li>\n"
-
-
-def get_name_div(animal_name):
-    """Returns the animal div string if the animal name if not None"""
-
-    if animal_name:
-        return f"<div class='card__title'>{animal_name}</div>\n"
-    else:
-        return ""
-
-
-def get_p_begin():
-    """Returns a string for opening a p html element"""
-
-    return "<p class='card__text'>\n"
-
-
-def get_p_end():
-    """Returns a string for endling a html element"""
-
-    return "</p>"
 
 
 def replace_template_with_string(template_path, html_path, data_string):
